@@ -15,23 +15,20 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
   const [geoData, setGeoData] = useState<any>(null);
 
   useEffect(() => {
-    // Load GeoJSON data for world countries
-    fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
+    // Load GeoJSON data for world countries with country codes
+    fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
       .then(res => res.json())
-      .then(data => setGeoData(data))
+      .then(data => {
+        console.log('GeoJSON sample feature:', data.features[0]);
+        setGeoData(data);
+      })
       .catch(err => console.error('Failed to load geo data:', err));
   }, []);
 
   const getCountryStyle = (feature: any) => {
-    const countryCode = feature.properties.iso_a2 || feature.properties.ISO_A2;
+    const props = feature.properties;
+    const countryCode = props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
     const relationLevel = relations.get(countryCode) ?? RelationLevel.UNKNOWN;
-    
-    console.log('Styling country:', {
-      name: feature.properties.name,
-      code: countryCode,
-      relationLevel,
-      hasRelation: relations.has(countryCode)
-    });
     
     return {
       fillColor: RelationColors[relationLevel],
@@ -48,19 +45,20 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
       
       (layer as L.Path).on({
         click: () => {
-          const countryCode = feature.properties.iso_a2 || feature.properties.ISO_A2;
+          const props = feature.properties;
+          const countryCode = props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
           console.log('Clicked country:', {
-            name: feature.properties.name,
+            name: props.name,
             code: countryCode,
-            allProperties: feature.properties
+            allProperties: props
           });
           
           const country: Country = {
             code: countryCode,
-            name: feature.properties.name,
-            nameJa: feature.properties.name, // TODO: Add Japanese names
+            name: props.name,
+            nameJa: props.name, // TODO: Add Japanese names
             capital: '',
-            region: feature.properties.subregion || '',
+            region: props.subregion || '',
             latlng: [0, 0] // Will be set from geometry
           };
           onCountrySelect(country);
@@ -74,8 +72,10 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
         },
         mouseout: (e: L.LeafletMouseEvent) => {
           const layer = e.target;
+          const props = feature.properties;
+          const countryCode = props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
           layer.setStyle({
-            weight: selectedCountry?.code === feature.properties.iso_a2 ? 3 : 1,
+            weight: selectedCountry?.code === countryCode ? 3 : 1,
             fillOpacity: 0.7
           });
         }
