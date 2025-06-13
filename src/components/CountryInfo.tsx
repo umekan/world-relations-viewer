@@ -16,7 +16,7 @@ export default function CountryInfo({
   relationDescription,
   onReset
 }: CountryInfoProps) {
-  if (!selectedCountry) return null;
+  console.log('CountryInfo render:', { selectedCountry, targetCountry });
 
   const getRelationText = (level: RelationLevel) => {
     switch (level) {
@@ -48,12 +48,16 @@ export default function CountryInfo({
       {/* サイドドロワー */}
       <div className={`fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-[1000] transform transition-transform duration-300 ease-in-out ${
         selectedCountry ? 'translate-x-0' : 'translate-x-full'
-      }`}>
+      }`}
+      style={{ 
+        transform: selectedCountry ? 'translateX(0)' : 'translateX(100%)',
+        visibility: selectedCountry ? 'visible' : 'hidden'
+      }}>
         <div className="h-full flex flex-col">
           {/* ヘッダー */}
           <div className="flex justify-between items-center p-6 border-b">
             <h2 className="text-xl font-bold">
-              {selectedCountry.nameJa || selectedCountry.name}
+              {selectedCountry?.nameJa || selectedCountry?.name || 'No Country'}
             </h2>
             <button
               onClick={onReset}
