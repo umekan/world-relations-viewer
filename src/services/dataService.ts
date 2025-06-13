@@ -26,12 +26,16 @@ export class DataService {
     }
 
     try {
+      console.log('Fetching countries from Supabase...');
       const { data, error } = await getCountries();
       
       if (error) {
         console.error('Error fetching countries:', error);
+        console.error('Error details:', JSON.stringify(error, null, 2));
         return [];
       }
+      
+      console.log('Countries fetched successfully:', data?.length || 0, 'records');
 
       countriesCache = data?.map((country: DbCountry) => ({
         code: country.code,
@@ -66,12 +70,16 @@ export class DataService {
     }
 
     try {
+      console.log('Fetching relations for country:', countryCode);
       const { data, error } = await getCountryRelations(countryCode);
       
       if (error) {
         console.error('Error fetching country relations:', error);
+        console.error('Error details:', JSON.stringify(error, null, 2));
         return new Map();
       }
+      
+      console.log('Relations fetched successfully:', data?.length || 0, 'records');
 
       const relations = data.map((row: DbRelation) => ({
         fromCountry: row.country_a || '',
@@ -104,11 +112,21 @@ export class DataService {
   // 2国間の関係を取得
   static async getRelation(countryA: string, countryB: string): Promise<Relation | null> {
     try {
+      console.log('Fetching specific relation between:', countryA, 'and', countryB);
       const { data, error } = await getSpecificRelation(countryA, countryB);
       
-      if (error || !data) {
+      if (error) {
+        console.error('Error fetching specific relation:', error);
+        console.error('Error details:', JSON.stringify(error, null, 2));
         return null;
       }
+      
+      if (!data) {
+        console.log('No relation found between:', countryA, 'and', countryB);
+        return null;
+      }
+      
+      console.log('Specific relation found:', data.country_a, '->', data.country_b);
 
       return {
         fromCountry: data.country_a || '',

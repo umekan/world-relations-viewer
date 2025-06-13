@@ -5,8 +5,25 @@ import type { Database } from '../types/database';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// 環境変数の検証とデバッグ情報
+console.log('Supabase URL:', supabaseUrl ? 'Set' : 'Missing');
+console.log('Supabase Anon Key:', supabaseAnonKey ? 'Set' : 'Missing');
+
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file.');
+  const errorMsg = `Missing Supabase environment variables:
+    VITE_SUPABASE_URL: ${supabaseUrl ? 'Set' : 'Missing'}
+    VITE_SUPABASE_ANON_KEY: ${supabaseAnonKey ? 'Set' : 'Missing'}`;
+  console.error(errorMsg);
+  throw new Error(errorMsg);
+}
+
+// 値の形式チェック
+if (!supabaseUrl.startsWith('https://')) {
+  throw new Error(`Invalid VITE_SUPABASE_URL format: ${supabaseUrl}`);
+}
+
+if (!supabaseAnonKey.startsWith('eyJ')) {
+  throw new Error(`Invalid VITE_SUPABASE_ANON_KEY format (should start with 'eyJ')`);
 }
 
 // Supabaseクライアントを作成
