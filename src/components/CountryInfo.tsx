@@ -39,19 +39,24 @@ export default function CountryInfo({
     <>
       {/* オーバーレイ */}
       <div 
-        className={`fixed inset-0 bg-black bg-opacity-50 z-[999] transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black bg-opacity-50 z-[1999] transition-opacity duration-300 ${
           selectedCountry ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
         onClick={onReset}
+        style={{
+          opacity: selectedCountry ? 1 : 0,
+          visibility: 'visible'
+        }}
       />
       
       {/* サイドドロワー */}
-      <div className={`fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-[1000] transform transition-transform duration-300 ease-in-out ${
+      <div className={`fixed top-0 right-0 h-full w-full max-w-md bg-red-500 shadow-2xl z-[2000] transform transition-transform duration-300 ease-in-out ${
         selectedCountry ? 'translate-x-0' : 'translate-x-full'
       }`}
       style={{ 
         transform: selectedCountry ? 'translateX(0)' : 'translateX(100%)',
-        visibility: selectedCountry ? 'visible' : 'hidden'
+        visibility: 'visible',
+        backgroundColor: 'red'
       }}>
         <div className="h-full flex flex-col">
           {/* ヘッダー */}
