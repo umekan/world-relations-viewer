@@ -45,6 +45,8 @@ export class DataService {
         region: country.region || '',
         latlng: [0, 0] as [number, number] // TODO: 座標データを追加
       })) || [];
+      
+      console.log('Countries loaded with Japanese names:', countriesCache.slice(0, 5).map(c => `${c.code}: ${c.nameJa}`));
 
       return countriesCache;
     } catch (error) {

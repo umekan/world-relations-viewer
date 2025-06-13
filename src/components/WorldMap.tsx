@@ -82,7 +82,22 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
 
   const onEachCountry = (feature: any, layer: L.Layer) => {
     if (feature.properties && feature.properties.name) {
-      layer.bindTooltip(feature.properties.name);
+      const props = feature.properties;
+      let countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
+      
+      // 国コードが取得できない場合は国名からSupabaseデータを検索
+      if (!countryCode && props.name) {
+        const country = countries.find(c => 
+          c.name === props.name || c.nameJa === props.name
+        );
+        countryCode = country?.code;
+      }
+      
+      // 日本語名を優先してツールチップに表示
+      const country = countries.find(c => c.code === countryCode);
+      const displayName = country?.nameJa || props.name;
+      
+      layer.bindTooltip(displayName);
       
       (layer as L.Path).on({
         click: () => {
@@ -103,12 +118,15 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
             allProperties: props
           });
           
+          // Supabaseから取得した国データを使用
+          const supabaseCountry = countries.find(c => c.code === countryCode);
+          
           const country: Country = {
             code: countryCode || props.name, // フォールバックとして国名を使用
-            name: props.name,
-            nameJa: props.name, // TODO: Add Japanese names
-            capital: '',
-            region: props.subregion || '',
+            name: supabaseCountry?.name || props.name,
+            nameJa: supabaseCountry?.nameJa || props.name,
+            capital: supabaseCountry?.capital || '',
+            region: supabaseCountry?.region || props.subregion || '',
             latlng: [0, 0] // Will be set from geometry
           };
           onCountrySelect(country);
