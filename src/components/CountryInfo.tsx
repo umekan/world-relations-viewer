@@ -16,17 +16,6 @@ export default function CountryInfo({
   relationDescription,
   onReset
 }: CountryInfoProps) {
-  console.log('CountryInfo render:', { selectedCountry, targetCountry });
-  
-  // デバッグ用：強制的にselectedCountryを作成
-  const debugSelectedCountry = selectedCountry || { 
-    code: 'TEST', 
-    name: 'Test Country', 
-    nameJa: 'テスト国', 
-    capital: '', 
-    region: '', 
-    latlng: [0, 0] 
-  };
 
   const getRelationText = (level: RelationLevel) => {
     switch (level) {
@@ -53,29 +42,17 @@ export default function CountryInfo({
           selectedCountry ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
         onClick={onReset}
-        style={{
-          opacity: selectedCountry ? 1 : 0,
-          visibility: 'visible'
-        }}
       />
       
       {/* サイドドロワー */}
-      <div className="fixed top-0 right-0 h-full w-full max-w-md bg-red-500 shadow-2xl z-[2000]"
-      style={{ 
-        transform: 'translateX(0)',
-        visibility: 'visible',
-        backgroundColor: 'red',
-        position: 'fixed',
-        top: 0,
-        right: 0,
-        width: '400px',
-        height: '100vh'
-      }}>
+      <div className={`fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-[2000] transform transition-transform duration-300 ease-in-out ${
+        selectedCountry ? 'translate-x-0' : 'translate-x-full'
+      }`}>
         <div className="h-full flex flex-col">
           {/* ヘッダー */}
           <div className="flex justify-between items-center p-6 border-b">
-            <h2 className="text-xl font-bold text-white">
-              {debugSelectedCountry.nameJa || debugSelectedCountry.name || 'No Country'}
+            <h2 className="text-xl font-bold">
+              {selectedCountry?.nameJa || selectedCountry?.name}
             </h2>
             <button
               onClick={onReset}
