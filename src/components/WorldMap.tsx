@@ -107,9 +107,13 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
       <MapContainer
         center={[20, 0]}
         zoom={2}
+        minZoom={1}
+        maxZoom={8}
         className="w-full h-full"
         scrollWheelZoom={true}
-        worldCopyJump={true}
+        worldCopyJump={false}
+        maxBounds={[[-90, -180], [90, 180]]}
+        maxBoundsViscosity={1.0}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
