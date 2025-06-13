@@ -27,7 +27,7 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
 
   const getCountryStyle = (feature: any) => {
     const props = feature.properties;
-    const countryCode = props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
+    const countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
     const relationLevel = relations.get(countryCode) ?? RelationLevel.UNKNOWN;
     
     return {
