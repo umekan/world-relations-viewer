@@ -1,4 +1,5 @@
-import { Country, RelationLevel, RelationColors } from '../types';
+import type { Country } from '../types';
+import { RelationLevel, RelationColors } from '../types';
 
 interface CountryInfoProps {
   selectedCountry: Country | null;

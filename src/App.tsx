@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import WorldMap from './components/WorldMap'
 import CountryInfo from './components/CountryInfo'
-import { Country, RelationLevel } from './types'
+import type { Country } from './types'
+import { RelationLevel } from './types'
 import { getRelation, getCountryRelations } from './data/relations'
 import './App.css'
 

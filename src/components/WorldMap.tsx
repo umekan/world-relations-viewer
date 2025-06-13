@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import L from 'leaflet';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
-import { Country, RelationLevel, RelationColors } from '../types';
+import type { Country } from '../types';
+import { RelationLevel, RelationColors } from '../types';
 import 'leaflet/dist/leaflet.css';
 
 interface WorldMapProps {

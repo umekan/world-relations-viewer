@@ -1,4 +1,5 @@
-import { Relation, RelationLevel } from '../types';
+import type { Relation } from '../types';
+import { RelationLevel } from '../types';
 
 // サンプルデータ - 実際にはより包括的なデータセットが必要
 export const relations: Relation[] = [

@@ -15,14 +15,16 @@ export interface Relation {
   lastUpdated: string;
 }
 
-export enum RelationLevel {
-  VERY_FRIENDLY = 5,
-  FRIENDLY = 4,
-  NEUTRAL = 3,
-  TENSE = 2,
-  VERY_TENSE = 1,
-  UNKNOWN = 0
-}
+export const RelationLevel = {
+  VERY_FRIENDLY: 5,
+  FRIENDLY: 4,
+  NEUTRAL: 3,
+  TENSE: 2,
+  VERY_TENSE: 1,
+  UNKNOWN: 0
+} as const;
+
+export type RelationLevel = typeof RelationLevel[keyof typeof RelationLevel];
 
 export const RelationColors: Record<RelationLevel, string> = {
   [RelationLevel.VERY_FRIENDLY]: '#10b981', // emerald-500
