@@ -49,8 +49,8 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
     const props = feature.properties;
     let countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
     
-    // 国コードが取得できない場合は国名からSupabaseデータを検索
-    if (!countryCode && props.name) {
+    // 国コードが無効な場合（-99等）や取得できない場合は国名からSupabaseデータを検索
+    if (!countryCode || countryCode === '-99' || countryCode === '-1') {
       const country = countries.find(c => 
         c.name === props.name || c.nameJa === props.name
       );
@@ -64,7 +64,7 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
         fillColor: RelationColors[relationLevel],
         weight: selectedCountry?.code === countryCode ? 3 : 1,
         opacity: 1,
-        color: selectedCountry?.code === countryCode ? InitialCountryColors.SELECTED : '#e5e7eb',
+        color: selectedCountry?.code === countryCode ? '#1e40af' : '#9ca3af', // blue-800 for selected, gray-400 for others
         fillOpacity: 0.7
       };
     }
@@ -73,10 +73,10 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
     const hasRelationData = countryCode && countriesWithRelations.has(countryCode);
     return {
       fillColor: hasRelationData ? InitialCountryColors.HAS_DATA : InitialCountryColors.NO_DATA,
-      weight: 1,
+      weight: hasRelationData ? 2 : 0.8,
       opacity: 1,
-      color: '#e5e7eb',
-      fillOpacity: 0.6
+      color: hasRelationData ? '#2563eb' : '#9ca3af', // blue-600 for data, gray-400 for no data
+      fillOpacity: hasRelationData ? 0.8 : 0.6
     };
   };
 
@@ -85,17 +85,27 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
       const props = feature.properties;
       let countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
       
-      // 国コードが取得できない場合は国名からSupabaseデータを検索
-      if (!countryCode && props.name) {
+      // 国コードが無効な場合（-99等）や取得できない場合は国名からSupabaseデータを検索
+      if (!countryCode || countryCode === '-99' || countryCode === '-1') {
         const country = countries.find(c => 
           c.name === props.name || c.nameJa === props.name
         );
         countryCode = country?.code;
       }
       
+      // フランスとスペインのデバッグログ
+      if (props.name === 'France' || props.name === 'Spain' || props.name === 'フランス' || props.name === 'スペイン') {
+        console.log('Debug country mapping:', {
+          name: props.name,
+          countryCode: countryCode,
+          allProps: props,
+          foundInDatabase: !!countries.find(c => c.code === countryCode)
+        });
+      }
+      
       // 日本語名を優先してツールチップに表示
       const country = countries.find(c => c.code === countryCode);
-      const displayName = country?.nameJa || props.name;
+      const displayName = country?.nameJa || country?.name || props.name;
       
       layer.bindTooltip(displayName);
       
@@ -104,8 +114,8 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
           const props = feature.properties;
           let countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
           
-          // 国コードが取得できない場合は国名からSupabaseデータを検索
-          if (!countryCode && props.name) {
+          // 国コードが無効な場合（-99等）や取得できない場合は国名からSupabaseデータを検索
+          if (!countryCode || countryCode === '-99' || countryCode === '-1') {
             const country = countries.find(c => 
               c.name === props.name || c.nameJa === props.name
             );
@@ -117,6 +127,18 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
             code: countryCode,
             allProperties: props
           });
+          
+          // フランスとスペインの特別デバッグ
+          if (props.name === 'France' || props.name === 'Spain') {
+            console.log('FR/ES Debug - Click:', {
+              name: props.name,
+              extractedCode: countryCode,
+              iso2: props.ISO_A2,
+              iso3166: props['ISO3166-1-Alpha-2'],
+              foundInCountries: !!countries.find(c => c.code === countryCode),
+              relationsForCode: countriesWithRelations.has(countryCode || '')
+            });
+          }
           
           // Supabaseから取得した国データを使用
           const supabaseCountry = countries.find(c => c.code === countryCode);
@@ -134,8 +156,9 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
         mouseover: (e: L.LeafletMouseEvent) => {
           const layer = e.target;
           layer.setStyle({
-            weight: 2,
-            fillOpacity: 0.9
+            weight: 2.5,
+            fillOpacity: 0.85,
+            color: '#1e40af' // blue-800 on hover
           });
         },
         mouseout: (e: L.LeafletMouseEvent) => {
@@ -143,8 +166,8 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
           const props = feature.properties;
           let countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
           
-          // 国コードが取得できない場合は国名からSupabaseデータを検索
-          if (!countryCode && props.name) {
+          // 国コードが無効な場合（-99等）や取得できない場合は国名からSupabaseデータを検索
+          if (!countryCode || countryCode === '-99' || countryCode === '-1') {
             const country = countries.find(c => 
               c.name === props.name || c.nameJa === props.name
             );
