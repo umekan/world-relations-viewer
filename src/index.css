@@ -11,7 +11,7 @@ body {
 
 /* 地図の背景色（海）を調整 */
 .leaflet-container {
-  background-color: #0c4a6e !important; /* sky-900 - 深い青色 */
+  background-color: #f8fafc !important; /* slate-50 - 優しい明るさの背景 */
 }
 
 /* タイルが読み込まれていない部分の背景 */

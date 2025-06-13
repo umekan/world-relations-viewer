@@ -76,7 +76,7 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
       weight: hasRelationData ? 2 : 0.8,
       opacity: 1,
       color: hasRelationData ? '#2563eb' : '#9ca3af', // blue-600 for data, gray-400 for no data
-      fillOpacity: hasRelationData ? 0.8 : 0.6
+      fillOpacity: 0.8 // データありなしに関わらず透明度を統一
     };
   };
 
@@ -163,21 +163,8 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
         },
         mouseout: (e: L.LeafletMouseEvent) => {
           const layer = e.target;
-          const props = feature.properties;
-          let countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
-          
-          // 国コードが無効な場合（-99等）や取得できない場合は国名からSupabaseデータを検索
-          if (!countryCode || countryCode === '-99' || countryCode === '-1') {
-            const country = countries.find(c => 
-              c.name === props.name || c.nameJa === props.name
-            );
-            countryCode = country?.code;
-          }
-          
-          layer.setStyle({
-            weight: selectedCountry?.code === (countryCode || props.name) ? 3 : 1,
-            fillOpacity: 0.7
-          });
+          // 元のスタイルを完全に復元するため、getCountryStyleを再実行
+          layer.setStyle(getCountryStyle(feature));
         }
       });
     }
@@ -207,7 +194,7 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
             data={geoData}
             style={getCountryStyle}
             onEachFeature={onEachCountry}
-            key={selectedCountry?.code || 'default'}
+            key={`${selectedCountry?.code || 'default'}-${countries.length}-${countriesWithRelations.size}`}
           />
         )}
         <MapLegend showRelationColors={selectedCountry !== null && relations.size > 0} />
