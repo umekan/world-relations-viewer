@@ -194,7 +194,7 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
             data={geoData}
             style={getCountryStyle}
             onEachFeature={onEachCountry}
-            key={`${selectedCountry?.code || 'default'}-${countries.length}-${countriesWithRelations.size}`}
+            key={`${selectedCountry?.code || 'default'}-${countries.length}-${countriesWithRelations.size}-${relations.size}`}
           />
         )}
         <MapLegend showRelationColors={selectedCountry !== null && relations.size > 0} />
