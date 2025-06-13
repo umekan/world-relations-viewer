@@ -3,6 +3,7 @@ import L from 'leaflet';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import type { Country } from '../types';
 import { RelationLevel, RelationColors } from '../types';
+import { getCountryCodeFromName } from '../data/relations';
 import 'leaflet/dist/leaflet.css';
 
 interface WorldMapProps {
@@ -27,7 +28,13 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
 
   const getCountryStyle = (feature: any) => {
     const props = feature.properties;
-    const countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
+    let countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
+    
+    // 国コードが取得できない場合は国名から取得
+    if (!countryCode && props.name) {
+      countryCode = getCountryCodeFromName(props.name);
+    }
+    
     const relationLevel = relations.get(countryCode) ?? RelationLevel.UNKNOWN;
     
     return {
@@ -46,7 +53,13 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
       (layer as L.Path).on({
         click: () => {
           const props = feature.properties;
-          const countryCode = props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
+          let countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
+          
+          // 国コードが取得できない場合は国名から取得
+          if (!countryCode && props.name) {
+            countryCode = getCountryCodeFromName(props.name);
+          }
+          
           console.log('Clicked country:', {
             name: props.name,
             code: countryCode,
@@ -54,7 +67,7 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
           });
           
           const country: Country = {
-            code: countryCode,
+            code: countryCode || props.name, // フォールバックとして国名を使用
             name: props.name,
             nameJa: props.name, // TODO: Add Japanese names
             capital: '',
@@ -73,9 +86,15 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
         mouseout: (e: L.LeafletMouseEvent) => {
           const layer = e.target;
           const props = feature.properties;
-          const countryCode = props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
+          let countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
+          
+          // 国コードが取得できない場合は国名から取得
+          if (!countryCode && props.name) {
+            countryCode = getCountryCodeFromName(props.name);
+          }
+          
           layer.setStyle({
-            weight: selectedCountry?.code === countryCode ? 3 : 1,
+            weight: selectedCountry?.code === (countryCode || props.name) ? 3 : 1,
             fillOpacity: 0.7
           });
         }

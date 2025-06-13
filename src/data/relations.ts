@@ -1,6 +1,34 @@
 import type { Relation } from '../types';
 import { RelationLevel } from '../types';
 
+// 国名をキーとしたマッピング
+const countryNameToCode: Record<string, string> = {
+  'Japan': 'JP',
+  'United States of America': 'US',
+  'United States': 'US',
+  'China': 'CN',
+  'South Korea': 'KR',
+  'Korea, Republic of': 'KR',
+  'Australia': 'AU',
+  'Canada': 'CA',
+  'Russia': 'RU',
+  'Russian Federation': 'RU',
+  'Saudi Arabia': 'SA',
+  'Iran': 'IR',
+  'Iran, Islamic Republic of': 'IR',
+  'Israel': 'IL',
+  'Palestine': 'PS',
+  'Germany': 'DE',
+  'France': 'FR',
+  'United Kingdom': 'GB',
+  'India': 'IN',
+  'Pakistan': 'PK'
+};
+
+export function getCountryCodeFromName(name: string): string | null {
+  return countryNameToCode[name] || null;
+}
+
 // サンプルデータ - 実際にはより包括的なデータセットが必要
 export const relations: Relation[] = [
   // 日本の関係
