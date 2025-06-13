@@ -17,6 +17,10 @@ export const getCountries = () => supabase.from('countries').select('*');
 
 export const getRelations = () => supabase.from('relations').select('*');
 
+// 型定義をエクスポート
+export type Country = Database['public']['Tables']['countries']['Row'];
+export type Relation = Database['public']['Tables']['relations']['Row'];
+
 export const getCountryRelations = (countryCode: string) =>
   supabase
     .from('relations')
@@ -29,3 +33,4 @@ export const getSpecificRelation = (countryA: string, countryB: string) =>
     .select('*')
     .or(`and(country_a.eq.${countryA},country_b.eq.${countryB}),and(country_a.eq.${countryB},country_b.eq.${countryA})`)
     .single();
+

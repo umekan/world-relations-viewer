@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ThemeProvider, createTheme, CssBaseline, Box } from '@mui/material'
 import WorldMap from './components/WorldMap'
 import CountryInfoPanel from './components/CountryInfoPanel'
 import type { Country } from './types'
 import { RelationLevel } from './types'
-import { getRelation, getCountryRelations } from './data/relations'
+import { DataService } from './services/dataService'
 import './App.css'
 
 const theme = createTheme({
@@ -33,12 +33,12 @@ function App() {
   const [targetCountry, setTargetCountry] = useState<Country | null>(null)
   const [countryRelations, setCountryRelations] = useState<Map<string, RelationLevel>>(new Map())
 
-  const handleCountrySelect = (country: Country) => {
+  const handleCountrySelect = async (country: Country) => {
     console.log('Country selected:', country);
     
     if (!selectedCountry) {
       // 最初の国を選択
-      const relations = getCountryRelations(country.code);
+      const relations = await DataService.getCountryRelations(country.code);
       console.log('Country relations:', relations);
       setSelectedCountry(country)
       setCountryRelations(relations)
@@ -57,12 +57,19 @@ function App() {
     setCountryRelations(new Map())
   }
 
-  const getCurrentRelation = () => {
-    if (!selectedCountry || !targetCountry) return null
-    return getRelation(selectedCountry.code, targetCountry.code)
-  }
+  const [currentRelation, setCurrentRelation] = useState<any>(null)
 
-  const relation = getCurrentRelation()
+  useEffect(() => {
+    const getCurrentRelation = async () => {
+      if (!selectedCountry || !targetCountry) {
+        setCurrentRelation(null)
+        return
+      }
+      const relation = await DataService.getRelation(selectedCountry.code, targetCountry.code)
+      setCurrentRelation(relation)
+    }
+    getCurrentRelation()
+  }, [selectedCountry, targetCountry])
 
   return (
     <ThemeProvider theme={theme}>
@@ -76,8 +83,11 @@ function App() {
         <CountryInfoPanel
           selectedCountry={selectedCountry}
           targetCountry={targetCountry}
-          relationLevel={relation?.level || RelationLevel.UNKNOWN}
-          relationDescription={relation?.description || 'この2国間の関係データはまだ登録されていません。'}
+          relationLevel={currentRelation?.level || RelationLevel.UNKNOWN}
+          relationDescription={currentRelation?.overallDescription || 'この2国間の関係データはまだ登録されていません。'}
+          politicalMilitaryDescription={currentRelation?.politicalMilitaryDescription}
+          economicDescription={currentRelation?.economicDescription}
+          culturalDescription={currentRelation?.culturalDescription}
           onReset={handleReset}
         />
       </Box>

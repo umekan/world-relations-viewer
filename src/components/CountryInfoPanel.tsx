@@ -16,6 +16,9 @@ interface CountryInfoPanelProps {
   targetCountry: Country | null;
   relationLevel: RelationLevel;
   relationDescription: string;
+  politicalMilitaryDescription?: string;
+  economicDescription?: string;
+  culturalDescription?: string;
   onReset: () => void;
 }
 
@@ -24,6 +27,9 @@ export default function CountryInfoPanel({
   targetCountry,
   relationLevel,
   relationDescription,
+  politicalMilitaryDescription,
+  economicDescription,
+  culturalDescription,
   onReset
 }: CountryInfoPanelProps) {
   const getRelationText = (level: RelationLevel) => {
@@ -106,10 +112,54 @@ export default function CountryInfoPanel({
             </Box>
 
             <Box>
-              <Typography variant="body2" sx={{ lineHeight: 1.8 }}>
+              <Typography variant="body2" sx={{ lineHeight: 1.8, mb: 2 }}>
                 {relationDescription}
               </Typography>
             </Box>
+
+            {(politicalMilitaryDescription || economicDescription || culturalDescription) && (
+              <>
+                <Divider />
+                <Box>
+                  <Typography variant="h6" gutterBottom sx={{ fontSize: '1rem' }}>
+                    分野別詳細
+                  </Typography>
+                  
+                  {politicalMilitaryDescription && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="subtitle2" color="primary" gutterBottom>
+                        🛡️ 政治・軍事
+                      </Typography>
+                      <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
+                        {politicalMilitaryDescription}
+                      </Typography>
+                    </Box>
+                  )}
+                  
+                  {economicDescription && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="subtitle2" color="primary" gutterBottom>
+                        💰 経済・貿易
+                      </Typography>
+                      <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
+                        {economicDescription}
+                      </Typography>
+                    </Box>
+                  )}
+                  
+                  {culturalDescription && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="subtitle2" color="primary" gutterBottom>
+                        🎭 文化・社会
+                      </Typography>
+                      <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
+                        {culturalDescription}
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
+              </>
+            )}
           </Stack>
         ) : (
           <Typography variant="body2" color="text.secondary">

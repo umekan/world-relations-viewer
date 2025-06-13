@@ -30,11 +30,14 @@ export interface Database {
       relations: {
         Row: {
           id: number;
-          country_a: string;
-          country_b: string;
-          relation_level: number;
-          description: string;
-          last_updated: string;
+          country_a: string | null;
+          country_b: string | null;
+          overall_level: number | null;
+          overall_description: string;
+          political_military_description: string | null;
+          economic_description: string | null;
+          cultural_description: string | null;
+          last_updated: string | null;
           data_source: string | null;
         };
         Insert: {

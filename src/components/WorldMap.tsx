@@ -3,7 +3,7 @@ import L from 'leaflet';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import type { Country } from '../types';
 import { RelationLevel, RelationColors } from '../types';
-import { getCountryCodeFromName } from '../data/relations';
+import { DataService } from '../services/dataService';
 import 'leaflet/dist/leaflet.css';
 
 interface WorldMapProps {
@@ -14,6 +14,7 @@ interface WorldMapProps {
 
 export default function WorldMap({ selectedCountry, onCountrySelect, relations }: WorldMapProps) {
   const [geoData, setGeoData] = useState<any>(null);
+  const [countries, setCountries] = useState<Country[]>([]);
 
   useEffect(() => {
     // Load GeoJSON data for world countries with country codes
@@ -24,15 +25,26 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
         setGeoData(data);
       })
       .catch(err => console.error('Failed to load geo data:', err));
+
+    // Load countries from Supabase
+    DataService.getAllCountries()
+      .then(data => {
+        console.log('Countries from Supabase:', data);
+        setCountries(data);
+      })
+      .catch(err => console.error('Failed to load countries from Supabase:', err));
   }, []);
 
   const getCountryStyle = (feature: any) => {
     const props = feature.properties;
     let countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
     
-    // 国コードが取得できない場合は国名から取得
+    // 国コードが取得できない場合は国名からSupabaseデータを検索
     if (!countryCode && props.name) {
-      countryCode = getCountryCodeFromName(props.name);
+      const country = countries.find(c => 
+        c.name === props.name || c.nameJa === props.name
+      );
+      countryCode = country?.code;
     }
     
     const relationLevel = relations.get(countryCode) ?? RelationLevel.UNKNOWN;
@@ -55,9 +67,12 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
           const props = feature.properties;
           let countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
           
-          // 国コードが取得できない場合は国名から取得
+          // 国コードが取得できない場合は国名からSupabaseデータを検索
           if (!countryCode && props.name) {
-            countryCode = getCountryCodeFromName(props.name);
+            const country = countries.find(c => 
+              c.name === props.name || c.nameJa === props.name
+            );
+            countryCode = country?.code;
           }
           
           console.log('Clicked country:', {
@@ -88,9 +103,12 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
           const props = feature.properties;
           let countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
           
-          // 国コードが取得できない場合は国名から取得
+          // 国コードが取得できない場合は国名からSupabaseデータを検索
           if (!countryCode && props.name) {
-            countryCode = getCountryCodeFromName(props.name);
+            const country = countries.find(c => 
+              c.name === props.name || c.nameJa === props.name
+            );
+            countryCode = country?.code;
           }
           
           layer.setStyle({

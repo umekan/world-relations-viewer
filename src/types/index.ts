@@ -11,7 +11,10 @@ export interface Relation {
   fromCountry: string;
   toCountry: string;
   level: RelationLevel;
-  description: string;
+  overallDescription: string;
+  politicalMilitaryDescription?: string;
+  economicDescription?: string;
+  culturalDescription?: string;
   lastUpdated: string;
 }
 

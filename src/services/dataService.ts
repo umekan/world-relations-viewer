@@ -1,4 +1,5 @@
-import { supabase, getCountries, getCountryRelations, getSpecificRelation } from '../lib/supabase';
+import { getCountries, getCountryRelations, getSpecificRelation } from '../lib/supabase';
+import type { Country as DbCountry, Relation as DbRelation } from '../lib/supabase';
 import type { Country, Relation } from '../types';
 import { RelationLevel } from '../types';
 
@@ -7,6 +8,17 @@ let countriesCache: Country[] | null = null;
 let relationsCache: Map<string, Relation[]> = new Map();
 
 export class DataService {
+  // 数値から関係レベルにマッピング
+  private static mapRelationLevel(level: number | null): RelationLevel {
+    switch (level) {
+      case 1: return RelationLevel.VERY_TENSE;
+      case 2: return RelationLevel.TENSE;
+      case 3: return RelationLevel.NEUTRAL;
+      case 4: return RelationLevel.FRIENDLY;
+      case 5: return RelationLevel.VERY_FRIENDLY;
+      default: return RelationLevel.NEUTRAL;
+    }
+  }
   // 全ての国を取得
   static async getAllCountries(): Promise<Country[]> {
     if (countriesCache) {
@@ -21,14 +33,14 @@ export class DataService {
         return [];
       }
 
-      countriesCache = data.map(country => ({
+      countriesCache = data?.map((country: DbCountry) => ({
         code: country.code,
         name: country.name_en,
         nameJa: country.name_ja || country.name_en,
         capital: country.capital || '',
         region: country.region || '',
         latlng: [0, 0] as [number, number] // TODO: 座標データを追加
-      }));
+      })) || [];
 
       return countriesCache;
     } catch (error) {
@@ -61,18 +73,21 @@ export class DataService {
         return new Map();
       }
 
-      const relations = data.map(row => ({
-        fromCountry: row.country_a,
-        toCountry: row.country_b,
-        level: row.relation_level as RelationLevel,
-        description: row.description,
-        lastUpdated: row.last_updated
+      const relations = data.map((row: DbRelation) => ({
+        fromCountry: row.country_a || '',
+        toCountry: row.country_b || '',
+        level: this.mapRelationLevel(row.overall_level),
+        overallDescription: row.overall_description,
+        politicalMilitaryDescription: row.political_military_description || undefined,
+        economicDescription: row.economic_description || undefined,
+        culturalDescription: row.cultural_description || undefined,
+        lastUpdated: row.last_updated || new Date().toISOString()
       }));
 
       relationsCache.set(cacheKey, relations);
 
       const relationMap = new Map<string, RelationLevel>();
-      relations.forEach(relation => {
+      relations.forEach((relation: Relation) => {
         const otherCountry = relation.fromCountry === countryCode 
           ? relation.toCountry 
           : relation.fromCountry;
@@ -96,11 +111,14 @@ export class DataService {
       }
 
       return {
-        fromCountry: data.country_a,
-        toCountry: data.country_b,
-        level: data.relation_level as RelationLevel,
-        description: data.description,
-        lastUpdated: data.last_updated
+        fromCountry: data.country_a || '',
+        toCountry: data.country_b || '',
+        level: this.mapRelationLevel(data.overall_level),
+        overallDescription: data.overall_description,
+        politicalMilitaryDescription: data.political_military_description || undefined,
+        economicDescription: data.economic_description || undefined,
+        culturalDescription: data.cultural_description || undefined,
+        lastUpdated: data.last_updated || new Date().toISOString()
       };
     } catch (error) {
       console.error('Failed to fetch specific relation:', error);
