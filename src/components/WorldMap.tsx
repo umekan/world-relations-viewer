@@ -105,14 +105,14 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
   return (
     <div className="w-full h-screen">
       <MapContainer
-        center={[20, 0]}
+        center={[30, 0]}
         zoom={2}
         minZoom={1}
         maxZoom={8}
         className="w-full h-full"
         scrollWheelZoom={true}
         worldCopyJump={false}
-        maxBounds={[[-85, -170], [85, 170]]}
+        maxBounds={[[-60, -170], [85, 170]]}
         maxBoundsViscosity={1.0}
         crs={L.CRS.EPSG3857}
       >
