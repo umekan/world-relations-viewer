@@ -48,7 +48,7 @@ function App() {
         onCountrySelect={handleCountrySelect}
         relations={countryRelations}
       />
-      <div className="absolute top-4 left-4 bottom-4 w-80 bg-blue-500 rounded-lg shadow-lg p-4 z-[1000] overflow-y-auto" style={{ backgroundColor: 'blue', color: 'white' }}>
+      <div className="absolute top-4 left-4 bottom-4 w-80 bg-blue-500 rounded-lg shadow-lg p-4 z-[3000] overflow-y-auto" style={{ backgroundColor: 'blue', color: 'white', zIndex: 3000 }}>
         <h1 className="text-2xl font-bold mb-2 text-white">World Relations Viewer</h1>
         
         {!selectedCountry ? (
