@@ -112,12 +112,14 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
         className="w-full h-full"
         scrollWheelZoom={true}
         worldCopyJump={false}
-        maxBounds={[[-90, -180], [90, 180]]}
+        maxBounds={[[-85, -170], [85, 170]]}
         maxBoundsViscosity={1.0}
+        crs={L.CRS.EPSG3857}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          noWrap={true}
         />
         {geoData && (
           <GeoJSON

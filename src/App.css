@@ -8,6 +8,13 @@
 .leaflet-container {
   width: 100%;
   height: 100%;
+  overflow: hidden;
+}
+
+/* Prevent map from wrapping horizontally */
+.leaflet-container .leaflet-tile-pane {
+  max-width: 100vw;
+  overflow: hidden;
 }
 
 /* Fix for Leaflet tooltip z-index */
