@@ -1,13 +1,28 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../types/database';
 
-// 環境変数からSupabaseの設定を取得
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// 環境変数からSupabaseの設定を取得（トリム処理）
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim();
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
 
 // 環境変数の検証とデバッグ情報
-console.log('Supabase URL:', supabaseUrl ? 'Set' : 'Missing');
-console.log('Supabase Anon Key:', supabaseAnonKey ? 'Set' : 'Missing');
+console.log('Supabase URL:', supabaseUrl ? `Set (${supabaseUrl.length} chars)` : 'Missing');
+console.log('Supabase Anon Key:', supabaseAnonKey ? `Set (${supabaseAnonKey.length} chars)` : 'Missing');
+
+// 不正な文字をチェック
+if (supabaseUrl) {
+  const hasInvalidChars = /[\n\r\t]/.test(supabaseUrl);
+  if (hasInvalidChars) {
+    console.error('URL contains invalid characters (newlines/tabs)');
+  }
+}
+
+if (supabaseAnonKey) {
+  const hasInvalidChars = /[\n\r\t]/.test(supabaseAnonKey);
+  if (hasInvalidChars) {
+    console.error('Anon key contains invalid characters (newlines/tabs)');
+  }
+}
 
 if (!supabaseUrl || !supabaseAnonKey) {
   const errorMsg = `Missing Supabase environment variables:
