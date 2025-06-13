@@ -23,8 +23,15 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
   }, []);
 
   const getCountryStyle = (feature: any) => {
-    const countryCode = feature.properties.iso_a2;
+    const countryCode = feature.properties.iso_a2 || feature.properties.ISO_A2;
     const relationLevel = relations.get(countryCode) ?? RelationLevel.UNKNOWN;
+    
+    console.log('Styling country:', {
+      name: feature.properties.name,
+      code: countryCode,
+      relationLevel,
+      hasRelation: relations.has(countryCode)
+    });
     
     return {
       fillColor: RelationColors[relationLevel],
@@ -41,8 +48,15 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
       
       (layer as L.Path).on({
         click: () => {
+          const countryCode = feature.properties.iso_a2 || feature.properties.ISO_A2;
+          console.log('Clicked country:', {
+            name: feature.properties.name,
+            code: countryCode,
+            allProperties: feature.properties
+          });
+          
           const country: Country = {
-            code: feature.properties.iso_a2,
+            code: countryCode,
             name: feature.properties.name,
             nameJa: feature.properties.name, // TODO: Add Japanese names
             capital: '',

@@ -12,10 +12,14 @@ function App() {
   const [countryRelations, setCountryRelations] = useState<Map<string, RelationLevel>>(new Map())
 
   const handleCountrySelect = (country: Country) => {
+    console.log('Country selected:', country);
+    
     if (!selectedCountry) {
       // 最初の国を選択
+      const relations = getCountryRelations(country.code);
+      console.log('Country relations:', relations);
       setSelectedCountry(country)
-      setCountryRelations(getCountryRelations(country.code))
+      setCountryRelations(relations)
     } else if (selectedCountry.code === country.code) {
       // 同じ国をクリックした場合はリセット
       handleReset()
