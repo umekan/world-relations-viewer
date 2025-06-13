@@ -22,3 +22,13 @@
 .leaflet-tooltip {
   z-index: 1001 !important;
 }
+
+/* Remove focus outline on country click */
+.leaflet-interactive:focus {
+  outline: none !important;
+}
+
+/* Remove blue selection highlight */
+.leaflet-interactive {
+  outline: none !important;
+}
