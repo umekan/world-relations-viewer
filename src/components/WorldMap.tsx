@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import L from 'leaflet';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import type { Country } from '../types';
-import { RelationLevel, RelationColors } from '../types';
+import { RelationLevel, RelationColors, InitialCountryColors } from '../types';
 import { DataService } from '../services/dataService';
+import MapLegend from './MapLegend';
 import 'leaflet/dist/leaflet.css';
 
 interface WorldMapProps {
@@ -15,6 +16,7 @@ interface WorldMapProps {
 export default function WorldMap({ selectedCountry, onCountrySelect, relations }: WorldMapProps) {
   const [geoData, setGeoData] = useState<any>(null);
   const [countries, setCountries] = useState<Country[]>([]);
+  const [countriesWithRelations, setCountriesWithRelations] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     // Load GeoJSON data for world countries with country codes
@@ -33,6 +35,14 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
         setCountries(data);
       })
       .catch(err => console.error('Failed to load countries from Supabase:', err));
+
+    // Load countries with relation data
+    DataService.getCountriesWithRelations()
+      .then(data => {
+        console.log('Countries with relations:', data);
+        setCountriesWithRelations(data);
+      })
+      .catch(err => console.error('Failed to load countries with relations:', err));
   }, []);
 
   const getCountryStyle = (feature: any) => {
@@ -47,14 +57,26 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
       countryCode = country?.code;
     }
     
-    const relationLevel = relations.get(countryCode) ?? RelationLevel.UNKNOWN;
+    // 選択された国がある場合は関係性に基づく色分け
+    if (selectedCountry && relations.size > 0) {
+      const relationLevel = relations.get(countryCode) ?? RelationLevel.UNKNOWN;
+      return {
+        fillColor: RelationColors[relationLevel],
+        weight: selectedCountry?.code === countryCode ? 3 : 1,
+        opacity: 1,
+        color: selectedCountry?.code === countryCode ? InitialCountryColors.SELECTED : '#e5e7eb',
+        fillOpacity: 0.7
+      };
+    }
     
+    // 初期状態：関係性データの有無で色分け
+    const hasRelationData = countryCode && countriesWithRelations.has(countryCode);
     return {
-      fillColor: RelationColors[relationLevel],
-      weight: selectedCountry?.code === countryCode ? 3 : 1,
+      fillColor: hasRelationData ? InitialCountryColors.HAS_DATA : InitialCountryColors.NO_DATA,
+      weight: 1,
       opacity: 1,
-      color: selectedCountry?.code === countryCode ? '#1f2937' : '#e5e7eb',
-      fillOpacity: 0.7
+      color: '#e5e7eb',
+      fillOpacity: 0.6
     };
   };
 
@@ -147,6 +169,7 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
             key={selectedCountry?.code || 'default'}
           />
         )}
+        <MapLegend showRelationColors={selectedCountry !== null && relations.size > 0} />
       </MapContainer>
     </div>
   );

@@ -1,4 +1,4 @@
-import { getCountries, getCountryRelations, getSpecificRelation } from '../lib/supabase';
+import { getCountries, getCountryRelations, getSpecificRelation, getRelations } from '../lib/supabase';
 import type { Country as DbCountry, Relation as DbRelation } from '../lib/supabase';
 import type { Country, Relation } from '../types';
 import { RelationLevel } from '../types';
@@ -141,6 +141,64 @@ export class DataService {
     } catch (error) {
       console.error('Failed to fetch specific relation:', error);
       return null;
+    }
+  }
+
+  // 関係性データが存在する国のセットを取得
+  static async getCountriesWithRelations(): Promise<Set<string>> {
+    try {
+      const relations = await this.getAllRelations();
+      const countriesWithData = new Set<string>();
+      
+      relations.forEach((relation: Relation) => {
+        countriesWithData.add(relation.fromCountry);
+        countriesWithData.add(relation.toCountry);
+      });
+      
+      console.log('Countries with relation data:', Array.from(countriesWithData));
+      return countriesWithData;
+    } catch (error) {
+      console.error('Failed to fetch countries with relations:', error);
+      return new Set();
+    }
+  }
+
+  // 全ての関係を取得
+  static async getAllRelations(): Promise<Relation[]> {
+    if (relationsCache.size > 0) {
+      // キャッシュから全ての関係を収集
+      const allRelations: Relation[] = [];
+      relationsCache.forEach(relations => {
+        allRelations.push(...relations);
+      });
+      return allRelations;
+    }
+
+    try {
+      console.log('Fetching all relations from Supabase...');
+      const { data, error } = await getRelations();
+      
+      if (error) {
+        console.error('Error fetching all relations:', error);
+        return [];
+      }
+      
+      const relations = data?.map((row: DbRelation) => ({
+        fromCountry: row.country_a || '',
+        toCountry: row.country_b || '',
+        level: this.mapRelationLevel(row.overall_level),
+        overallDescription: row.overall_description,
+        politicalMilitaryDescription: row.political_military_description || undefined,
+        economicDescription: row.economic_description || undefined,
+        culturalDescription: row.cultural_description || undefined,
+        lastUpdated: row.last_updated || new Date().toISOString()
+      })) || [];
+      
+      console.log('All relations fetched successfully:', relations.length, 'records');
+      return relations;
+    } catch (error) {
+      console.error('Failed to fetch all relations:', error);
+      return [];
     }
   }
 

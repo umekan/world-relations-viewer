@@ -37,3 +37,10 @@ export const RelationColors: Record<RelationLevel, string> = {
   [RelationLevel.VERY_TENSE]: '#ef4444',    // red-500
   [RelationLevel.UNKNOWN]: '#9ca3af'        // gray-400
 };
+
+// 初期状態での国の色分け
+export const InitialCountryColors = {
+  HAS_DATA: '#3b82f6',      // blue-500 - データありの国
+  NO_DATA: '#d1d5db',       // gray-300 - データなしの国
+  SELECTED: '#1f2937'       // gray-800 - 選択された国
+} as const;
