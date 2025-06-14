@@ -74,7 +74,15 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ position: 'relative', width: '100%', height: '100vh' }}>
+      <Box sx={{ 
+        position: 'relative', 
+        width: '100%', 
+        height: '100vh',
+        minHeight: '-webkit-fill-available', // iOS Safari対応
+        '@supports (-webkit-touch-callout: none)': {
+          height: '-webkit-fill-available', // iOS Safari専用
+        }
+      }}>
         <WorldMap
           selectedCountry={selectedCountry}
           onCountrySelect={handleCountrySelect}

@@ -184,7 +184,7 @@ export default function CountryInfoPanel({
       <Drawer
         anchor="bottom"
         open={!!selectedCountry}
-        onClose={onReset}
+        onClose={() => {}} // 外部タップでの自動クローズを無効化
         PaperProps={{
           sx: {
             height: selectedCountry && targetCountry ? '70vh' : '25vh',
@@ -196,6 +196,7 @@ export default function CountryInfoPanel({
         }}
         ModalProps={{
           keepMounted: true,
+          hideBackdrop: true, // バックドロップを無効化して地図操作を可能に
         }}
       >
         <PanelContent />
