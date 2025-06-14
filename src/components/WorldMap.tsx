@@ -188,8 +188,6 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
         maxBounds={[[-60, -170], [85, 170]]}
         maxBoundsViscosity={1.0}
         crs={L.CRS.EPSG3857}
-        tap={isMobile}
-        tapTolerance={15}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
