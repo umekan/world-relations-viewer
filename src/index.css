@@ -1,4 +1,5 @@
 @import 'leaflet/dist/leaflet.css';
+@import 'flag-icons/css/flag-icons.min.css';
 
 @tailwind base;
 @tailwind components;
@@ -39,6 +40,10 @@ html, body {
   -webkit-filter: none !important;
   /* ブラウザのダークモード自動調整を無効化 */
   forced-color-adjust: none !important;
+  /* 背景画像として使用されるSVGの保護 */
+  background-color: transparent !important;
+  /* 色の反転を防ぐ */
+  mix-blend-mode: normal !important;
 }
 
 /* ダークモード時の追加対策 */
@@ -50,6 +55,22 @@ html, body {
     /* 背景との混合モードを標準に */
     mix-blend-mode: normal !important;
     /* 強制的にライトモードの表示 */
+    color-scheme: light !important;
+    /* 追加の保護策 */
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  /* flag-iconsライブラリの内部要素も保護 */
+  .fi::before,
+  .fi::after {
+    filter: none !important;
+    -webkit-filter: none !important;
+    color-scheme: light !important;
+  }
+  
+  /* 国旗を含む親要素にもライトモードを適用 */
+  span:has(.fi) {
     color-scheme: light !important;
   }
 }

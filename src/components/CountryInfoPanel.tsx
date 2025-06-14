@@ -100,8 +100,9 @@ export default function CountryInfoPanel({
           <Stack spacing={3}>
             <Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <Typography variant="h6" component="h3">
-                  <CountryWithFlag country={targetCountry} size="medium" /> との関係
+                <Typography variant="h6" component="h3" sx={{ display: 'flex', alignItems: 'center' }}>
+                  <CountryWithFlag country={targetCountry} size="medium" />
+                  <span>との関係</span>
                 </Typography>
               </Box>
               

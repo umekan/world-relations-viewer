@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 /**
  * 国コードからflag-iconsのCSSクラス名を取得する関数
@@ -32,6 +32,7 @@ export const CountryWithFlag: React.FC<{
 }> = ({ country, size = 'small' }) => {
   const flagClass = getFlagClass(country.code);
   const name = country.nameJa || country.name;
+  const flagRef = useRef<HTMLSpanElement>(null);
   
   const sizeStyle = {
     small: { width: '1.5em', height: '1.125em' },
@@ -39,21 +40,42 @@ export const CountryWithFlag: React.FC<{
     large: { width: '2.5em', height: '1.875em' }
   }[size];
   
+  // ダークモード対策を強制的に適用
+  useEffect(() => {
+    if (flagRef.current) {
+      const element = flagRef.current;
+      // スタイルを強制的に適用
+      element.style.setProperty('filter', 'none', 'important');
+      element.style.setProperty('-webkit-filter', 'none', 'important');
+      element.style.setProperty('color-scheme', 'light', 'important');
+      element.style.setProperty('forced-color-adjust', 'none', 'important');
+      
+      // MutationObserverで変更を監視
+      const observer = new MutationObserver(() => {
+        element.style.setProperty('filter', 'none', 'important');
+        element.style.setProperty('-webkit-filter', 'none', 'important');
+      });
+      
+      observer.observe(element, {
+        attributes: true,
+        attributeFilter: ['style', 'class']
+      });
+      
+      return () => observer.disconnect();
+    }
+  }, [flagClass]);
+  
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5em' }}>
       {flagClass && (
         <span 
+          ref={flagRef}
           className={flagClass} 
           style={{
             ...sizeStyle,
             display: 'inline-block',
             borderRadius: '2px',
-            // ダークモード対応: 国旗の色が変わらないように強制的にライトモードの色を適用
-            filter: 'none',
-            colorScheme: 'light',
-            // SVGの色がダークモードの影響を受けないようにする
-            backgroundColor: 'transparent',
-            mixBlendMode: 'normal'
+            backgroundColor: 'transparent'
           }}
         />
       )}
