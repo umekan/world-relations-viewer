@@ -10,6 +10,7 @@ html, body {
   padding: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   height: 100%;
+  background-color: #fafaf9; /* warm-gray-50 - 落ち着いた背景色 */
   /* モバイルブラウザの100vh問題を解決 */
   height: 100vh;
   height: -webkit-fill-available;
@@ -19,16 +20,17 @@ html, body {
   height: 100%;
   height: 100vh;
   height: -webkit-fill-available;
+  background-color: #fafaf9; /* warm-gray-50 - 一貫した背景色 */
 }
 
 /* 地図の背景色（海）を調整 */
 .leaflet-container {
-  background-color: #f8fafc !important; /* slate-50 - 優しい明るさの背景 */
+  background-color: #eceff2 !important; /* stone-blue-100 - 落ち着いた薄いブルーグレー */
 }
 
 /* タイルが読み込まれていない部分の背景 */
 .leaflet-tile {
-  filter: brightness(1.1) contrast(1.1); /* タイルを少し明るく、コントラストを上げる */
+  filter: brightness(0.95) contrast(1.05) saturate(0.9); /* 少し抑えた色調に */
 }
 
 /* 国旗アイコンのダークモード対応 */

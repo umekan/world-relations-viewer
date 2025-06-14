@@ -10,11 +10,24 @@ import './App.css'
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#668197', // stone-blue-500 - 落ち着いたブルーグレー
+      light: '#869eb0', // stone-blue-400
+      dark: '#526a7e', // stone-blue-600
     },
     secondary: {
-      main: '#dc004e',
+      main: '#7a8565', // sage-500 - 落ち着いたセージグリーン
+      light: '#95a082', // sage-400
+      dark: '#626b4f', // sage-600
     },
+    background: {
+      default: '#fafaf9', // warm-gray-50 - とても淡いウォームグレー
+      paper: '#f5f5f4', // warm-gray-100 - 紙のような優しい色
+    },
+    text: {
+      primary: '#292524', // warm-gray-800 - 落ち着いたダークグレー
+      secondary: '#57534e', // warm-gray-600 - ミディアムグレー
+    },
+    divider: '#e7e5e4', // warm-gray-200 - 優しい区切り線
   },
   typography: {
     fontFamily: [
@@ -25,6 +38,47 @@ const theme = createTheme({
       'Roboto',
       'sans-serif'
     ].join(','),
+    h6: {
+      fontWeight: 500,
+      color: '#292524', // warm-gray-800
+    },
+    body1: {
+      color: '#44403c', // warm-gray-700
+      lineHeight: 1.6,
+    },
+    body2: {
+      color: '#57534e', // warm-gray-600
+      lineHeight: 1.5,
+    },
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#f5f5f4', // warm-gray-100
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06)', // 優しい影
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none', // ボタンテキストの大文字化を無効
+          borderRadius: '8px', // 丸みを持たせる
+          boxShadow: 'none',
+          '&:hover': {
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+          },
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: '6px', // 少し角丸に
+        },
+      },
+    },
   },
 });
 
@@ -78,6 +132,7 @@ function App() {
         position: 'relative', 
         width: '100%', 
         height: '100vh',
+        backgroundColor: 'background.default', // テーマの背景色を適用
         minHeight: '-webkit-fill-available', // iOS Safari対応
         '@supports (-webkit-touch-callout: none)': {
           height: '-webkit-fill-available', // iOS Safari専用

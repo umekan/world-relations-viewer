@@ -31,17 +31,17 @@ export const RelationLevel = {
 export type RelationLevel = typeof RelationLevel[keyof typeof RelationLevel];
 
 export const RelationColors: Record<RelationLevel, string> = {
-  [RelationLevel.VERY_FRIENDLY]: '#10b981', // emerald-500
-  [RelationLevel.FRIENDLY]: '#84cc16',      // lime-500
-  [RelationLevel.NEUTRAL]: '#eab308',       // yellow-500
-  [RelationLevel.TENSE]: '#f97316',         // orange-500
-  [RelationLevel.VERY_TENSE]: '#ef4444',    // red-500
-  [RelationLevel.UNKNOWN]: '#9ca3af'        // gray-400
+  [RelationLevel.VERY_FRIENDLY]: '#059669', // emerald-600 - 深い緑（非常に友好的）
+  [RelationLevel.FRIENDLY]: '#65a30d',      // lime-600 - 明るい緑（友好的）
+  [RelationLevel.NEUTRAL]: '#ca8a04',       // yellow-600 - 黄色（中立）
+  [RelationLevel.TENSE]: '#ea580c',         // orange-600 - オレンジ（緊張）
+  [RelationLevel.VERY_TENSE]: '#dc2626',    // red-600 - 赤（非常に緊張）
+  [RelationLevel.UNKNOWN]: '#6b7280'        // gray-500 - グレー（不明）
 };
 
 // 初期状態での国の色分け
 export const InitialCountryColors = {
-  HAS_DATA: '#60a5fa',      // blue-400 - データありの国（青）
-  NO_DATA: '#9ca3af',       // gray-400 - データなしの国（灰色）
-  SELECTED: '#1e40af'       // blue-800 - 選択された国
+  HAS_DATA: '#869eb0',      // stone-blue-400 - データありの国（落ち着いたブルー）
+  NO_DATA: '#a8a29e',       // warm-gray-400 - データなしの国（ウォームグレー）
+  SELECTED: '#526a7e'       // stone-blue-600 - 選択された国（ダークブルー）
 } as const;
