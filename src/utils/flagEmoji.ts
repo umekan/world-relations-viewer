@@ -46,24 +46,14 @@ const countryFlags: Record<string, string> = {
 };
 
 export const getFlagEmoji = (countryCode: string): string => {
-  console.log('getFlagEmoji called with:', countryCode);
-  
   if (!countryCode) {
-    console.log('No country code provided, returning earth emoji');
     return '🌍';
   }
   
   const upperCode = countryCode.toUpperCase();
-  console.log('Looking up flag for:', upperCode);
-  
   const flag = countryFlags[upperCode];
-  if (flag) {
-    console.log('Found flag:', flag, 'for code:', upperCode);
-    return flag;
-  }
   
-  console.log('No flag found for code:', upperCode, 'returning earth emoji');
-  return '🌍';
+  return flag || '🌍';
 };
 
 /**
