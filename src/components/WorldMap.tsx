@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import L from 'leaflet';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+import { useTheme, useMediaQuery } from '@mui/material';
 import type { Country } from '../types';
 import { RelationLevel, RelationColors, InitialCountryColors } from '../types';
 import { DataService } from '../services/dataService';
@@ -14,6 +15,8 @@ interface WorldMapProps {
 }
 
 export default function WorldMap({ selectedCountry, onCountrySelect, relations }: WorldMapProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [geoData, setGeoData] = useState<any>(null);
   const [countries, setCountries] = useState<Country[]>([]);
   const [countriesWithRelations, setCountriesWithRelations] = useState<Set<string>>(new Set());
@@ -174,15 +177,19 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
     <div className="w-full h-screen">
       <MapContainer
         center={[30, 0]}
-        zoom={2}
+        zoom={isMobile ? 1 : 2}
         minZoom={1}
         maxZoom={8}
         className="w-full h-full"
-        scrollWheelZoom={true}
+        scrollWheelZoom={!isMobile}
+        touchZoom={true}
+        doubleClickZoom={false}
         worldCopyJump={false}
         maxBounds={[[-60, -170], [85, 170]]}
         maxBoundsViscosity={1.0}
         crs={L.CRS.EPSG3857}
+        tap={isMobile}
+        tapTolerance={15}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

@@ -5,7 +5,10 @@ import {
   IconButton,
   Chip,
   Divider,
-  Stack
+  Stack,
+  Drawer,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import type { Country } from '../types';
@@ -32,6 +35,10 @@ export default function CountryInfoPanel({
   culturalDescription,
   onReset
 }: CountryInfoPanelProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
+
   const getRelationText = (level: RelationLevel) => {
     switch (level) {
       case RelationLevel.VERY_FRIENDLY:
@@ -53,25 +60,13 @@ export default function CountryInfoPanel({
     return RelationColors[level] || '#9ca3af';
   };
 
-  return (
-    <Paper
-      elevation={4}
-      sx={{
-        position: 'absolute',
-        top: 16,
-        left: 16,
-        bottom: 16,
-        width: 360,
-        zIndex: 3000,
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden'
-      }}
-    >
+  // 共通のコンテンツコンポーネント
+  const PanelContent = () => (
+    <>
       {/* ヘッダー */}
-      <Box sx={{ p: 3, borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ p: isMobile ? 2 : 3, borderBottom: 1, borderColor: 'divider' }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-          <Typography variant="h4" component="h1" fontWeight="bold">
+          <Typography variant={isMobile ? "h5" : "h4"} component="h1" fontWeight="bold">
             World Relations Viewer
           </Typography>
           {selectedCountry && (
@@ -89,7 +84,7 @@ export default function CountryInfoPanel({
       </Box>
 
       {/* コンテンツ */}
-      <Box sx={{ flex: 1, p: 3, overflow: 'auto' }}>
+      <Box sx={{ flex: 1, p: isMobile ? 2 : 3, overflow: 'auto' }}>
         {!selectedCountry ? (
           <Typography variant="body2" color="text.secondary">
             地図上の国をクリックして、国際関係を確認してください
@@ -180,6 +175,51 @@ export default function CountryInfoPanel({
           </Box>
         </>
       )}
+    </>
+  );
+
+  // モバイル表示：ボトムドロワー
+  if (isMobile) {
+    return (
+      <Drawer
+        anchor="bottom"
+        open={!!selectedCountry}
+        onClose={onReset}
+        PaperProps={{
+          sx: {
+            height: selectedCountry && targetCountry ? '70vh' : '25vh',
+            display: 'flex',
+            flexDirection: 'column',
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+          }
+        }}
+        ModalProps={{
+          keepMounted: true,
+        }}
+      >
+        <PanelContent />
+      </Drawer>
+    );
+  }
+
+  // PC/タブレット表示：左パネル
+  return (
+    <Paper
+      elevation={4}
+      sx={{
+        position: 'absolute',
+        top: 16,
+        left: 16,
+        bottom: 16,
+        width: isTablet ? 320 : 360,
+        zIndex: 3000,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden'
+      }}
+    >
+      <PanelContent />
     </Paper>
   );
 }
