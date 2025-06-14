@@ -81,7 +81,7 @@ describe('モバイル固定パネル操作テスト', () => {
       </ThemeProvider>
     );
 
-    expect(screen.getAllByText((content, element) => {
+    expect(screen.getAllByText((_content, element) => {
       return element?.textContent === 'アメリカ との関係';
     })[0]).toBeInTheDocument();
     expect(screen.getByText('非常に友好的')).toBeInTheDocument();
