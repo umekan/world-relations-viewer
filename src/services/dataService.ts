@@ -5,7 +5,7 @@ import { RelationLevel } from '../types';
 
 // キャッシュオブジェクト
 let countriesCache: Country[] | null = null;
-let relationsCache: Map<string, Relation[]> = new Map();
+const relationsCache: Map<string, Relation[]> = new Map();
 
 export class DataService {
   // 数値から関係レベルにマッピング
