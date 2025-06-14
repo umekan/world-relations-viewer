@@ -29,3 +29,27 @@ html, body {
 .leaflet-tile {
   filter: brightness(1.1) contrast(1.1); /* タイルを少し明るく、コントラストを上げる */
 }
+
+/* 国旗アイコンのダークモード対応 */
+.fi {
+  /* ダークモードでも国旗の色が変わらないように保護 */
+  filter: none !important;
+  color-scheme: light !important;
+  /* SVGの色反転を防ぐ */
+  -webkit-filter: none !important;
+  /* ブラウザのダークモード自動調整を無効化 */
+  forced-color-adjust: none !important;
+}
+
+/* ダークモード時の追加対策 */
+@media (prefers-color-scheme: dark) {
+  .fi {
+    /* ダークモードでも元の色を維持 */
+    filter: none !important;
+    -webkit-filter: none !important;
+    /* 背景との混合モードを標準に */
+    mix-blend-mode: normal !important;
+    /* 強制的にライトモードの表示 */
+    color-scheme: light !important;
+  }
+}

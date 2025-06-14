@@ -34,9 +34,9 @@ export const CountryWithFlag: React.FC<{
   const name = country.nameJa || country.name;
   
   const sizeStyle = {
-    small: { width: '1em', height: '0.75em' },
-    medium: { width: '1.5em', height: '1.125em' },
-    large: { width: '2em', height: '1.5em' }
+    small: { width: '1.5em', height: '1.125em' },
+    medium: { width: '2em', height: '1.5em' },
+    large: { width: '2.5em', height: '1.875em' }
   }[size];
   
   return (
@@ -47,7 +47,13 @@ export const CountryWithFlag: React.FC<{
           style={{
             ...sizeStyle,
             display: 'inline-block',
-            borderRadius: '2px'
+            borderRadius: '2px',
+            // ダークモード対応: 国旗の色が変わらないように強制的にライトモードの色を適用
+            filter: 'none',
+            colorScheme: 'light',
+            // SVGの色がダークモードの影響を受けないようにする
+            backgroundColor: 'transparent',
+            mixBlendMode: 'normal'
           }}
         />
       )}
