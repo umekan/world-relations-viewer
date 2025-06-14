@@ -6,7 +6,6 @@ import {
   Chip,
   Divider,
   Stack,
-  Drawer,
   useMediaQuery,
   useTheme
 } from '@mui/material';
@@ -84,7 +83,12 @@ export default function CountryInfoPanel({
       </Box>
 
       {/* コンテンツ */}
-      <Box sx={{ flex: 1, p: isMobile ? 2 : 3, overflow: 'auto' }}>
+      <Box sx={{ 
+        flex: 1, 
+        p: isMobile ? 2 : 3, 
+        overflow: 'auto',
+        minHeight: 0 // フレックスボックス内でのスクロール確保
+      }}>
         {!selectedCountry ? (
           <Typography variant="body2" color="text.secondary">
             地図上の国をクリックして、国際関係を確認してください
@@ -178,29 +182,26 @@ export default function CountryInfoPanel({
     </>
   );
 
-  // モバイル表示：ボトムドロワー
+  // モバイル表示：固定位置のコンパクトパネル
   if (isMobile) {
     return (
-      <Drawer
-        anchor="bottom"
-        open={!!selectedCountry}
-        onClose={() => {}} // 外部タップでの自動クローズを無効化
-        PaperProps={{
-          sx: {
-            height: selectedCountry && targetCountry ? '70vh' : '25vh',
-            display: 'flex',
-            flexDirection: 'column',
-            borderTopLeftRadius: 16,
-            borderTopRightRadius: 16,
-          }
-        }}
-        ModalProps={{
-          keepMounted: true,
-          hideBackdrop: true, // バックドロップを無効化して地図操作を可能に
+      <Paper
+        elevation={4}
+        sx={{
+          position: 'absolute',
+          bottom: 16,
+          left: 8,
+          right: 8,
+          maxHeight: selectedCountry && targetCountry ? '60vh' : '20vh',
+          zIndex: 1400, // 地図より上、でもモーダルより下
+          display: selectedCountry ? 'flex' : 'none',
+          flexDirection: 'column',
+          borderRadius: 2,
+          overflow: 'hidden'
         }}
       >
         <PanelContent />
-      </Drawer>
+      </Paper>
     );
   }
 

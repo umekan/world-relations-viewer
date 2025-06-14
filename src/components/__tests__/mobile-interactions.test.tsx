@@ -39,12 +39,12 @@ const mockMobileViewport = () => {
   window.dispatchEvent(new Event('resize'));
 };
 
-describe('モバイル操作テスト', () => {
+describe('モバイル固定パネル操作テスト', () => {
   beforeEach(() => {
     mockMobileViewport();
   });
 
-  it('1番目の国選択でドロワーが表示される', () => {
+  it('1番目の国選択で固定パネルが表示される', () => {
     const onReset = vi.fn();
     
     render(
@@ -86,7 +86,7 @@ describe('モバイル操作テスト', () => {
     expect(screen.getByText('日米は戦後から続く強固な同盟関係')).toBeInTheDocument();
   });
 
-  it('ドロワーが外部タップで閉じないことを確認', () => {
+  it('パネルが表示されており地図タップが可能な状態を確認', () => {
     const onReset = vi.fn();
     
     render(
@@ -101,14 +101,14 @@ describe('モバイル操作テスト', () => {
       </ThemeProvider>
     );
 
-    // ドロワーが表示されていることを確認
+    // パネルが表示されていることを確認
     expect(screen.getByText('日本')).toBeInTheDocument();
     
     // onResetが自動的に呼ばれていないことを確認
     expect(onReset).not.toHaveBeenCalled();
   });
 
-  it('×ボタンでのみドロワーがリセットされる', () => {
+  it('×ボタンでのみパネルがリセットされる', () => {
     const onReset = vi.fn();
     
     render(
