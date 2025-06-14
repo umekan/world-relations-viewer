@@ -59,10 +59,25 @@ export const getCountryRelations = (countryCode: string) =>
     .select('*')
     .or(`country_a.eq.${countryCode},country_b.eq.${countryCode}`);
 
-export const getSpecificRelation = (countryA: string, countryB: string) =>
-  supabase
+export const getSpecificRelation = async (countryA: string, countryB: string) => {
+  const { data, error } = await supabase
     .from('relations')
     .select('*')
-    .or(`and(country_a.eq.${countryA},country_b.eq.${countryB}),and(country_a.eq.${countryB},country_b.eq.${countryA})`)
-    .single();
+    .or(`and(country_a.eq.${countryA},country_b.eq.${countryB}),and(country_a.eq.${countryB},country_b.eq.${countryA})`);
+  
+  if (error) {
+    return { data: null, error };
+  }
+  
+  if (!data || data.length === 0) {
+    return { data: null, error: null };
+  }
+  
+  // 複数の行がある場合は最初の行を返す（ログで警告）
+  if (data.length > 1) {
+    console.warn(`Multiple relations found for ${countryA}-${countryB}:`, data);
+  }
+  
+  return { data: data[0], error: null };
+};
 
