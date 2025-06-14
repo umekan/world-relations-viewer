@@ -12,7 +12,7 @@ import {
 import { Close } from '@mui/icons-material';
 import type { Country } from '../types';
 import { RelationLevel, RelationColors } from '../types';
-import { getFlagEmoji } from '../utils/flagEmoji';
+import { CountryWithFlag } from '../utils/flagEmoji';
 
 interface CountryInfoPanelProps {
   selectedCountry: Country | null;
@@ -78,9 +78,8 @@ export default function CountryInfoPanel({
         
         {selectedCountry && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <span style={{ fontSize: '1.2em' }}>{getFlagEmoji(selectedCountry.code)}</span>
             <Typography variant="h6" component="h2" color="primary">
-              {selectedCountry.nameJa || selectedCountry.name}
+              <CountryWithFlag country={selectedCountry} size="medium" />
             </Typography>
           </Box>
         )}
@@ -101,9 +100,8 @@ export default function CountryInfoPanel({
           <Stack spacing={3}>
             <Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <span style={{ fontSize: '1.1em' }}>{getFlagEmoji(targetCountry.code)}</span>
                 <Typography variant="h6" component="h3">
-                  {targetCountry.nameJa || targetCountry.name} との関係
+                  <CountryWithFlag country={targetCountry} size="medium" /> との関係
                 </Typography>
               </Box>
               

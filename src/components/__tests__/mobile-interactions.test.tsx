@@ -81,7 +81,9 @@ describe('モバイル固定パネル操作テスト', () => {
       </ThemeProvider>
     );
 
-    expect(screen.getByText('アメリカ との関係')).toBeInTheDocument();
+    expect(screen.getAllByText((content, element) => {
+      return element?.textContent === 'アメリカ との関係';
+    })[0]).toBeInTheDocument();
     expect(screen.getByText('非常に友好的')).toBeInTheDocument();
     expect(screen.getByText('日米は戦後から続く強固な同盟関係')).toBeInTheDocument();
   });
