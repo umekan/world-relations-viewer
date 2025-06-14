@@ -161,9 +161,39 @@ export default function CountryInfoPanel({
             )}
           </Stack>
         ) : (
-          <Typography variant="body2" color="text.secondary">
-            他の国をクリックして、2国間の関係を確認してください。
-          </Typography>
+          <Stack spacing={2}>
+            {/* 国の基本情報 */}
+            <Box>
+              <Typography variant="body2" color="text.secondary" gutterBottom>
+                首都: {selectedCountry.capital || 'データなし'}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" gutterBottom>
+                地域: {selectedCountry.region || 'データなし'}
+              </Typography>
+            </Box>
+
+            {/* 国の説明 */}
+            {selectedCountry.description && (
+              <>
+                <Divider />
+                <Box>
+                  <Typography variant="h6" gutterBottom sx={{ fontSize: '1rem' }}>
+                    国の概要
+                  </Typography>
+                  <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
+                    {selectedCountry.description}
+                  </Typography>
+                </Box>
+              </>
+            )}
+
+            {/* 操作案内 */}
+            <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
+              <Typography variant="body2" color="text.secondary" align="center">
+                他の国をクリックして、2国間の関係を確認してください。
+              </Typography>
+            </Box>
+          </Stack>
         )}
       </Box>
 

@@ -5,6 +5,7 @@ export interface Country {
   capital: string;
   region: string;
   latlng: [number, number];
+  description?: string;
 }
 
 export interface Relation {

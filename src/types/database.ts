@@ -9,6 +9,7 @@ export interface Database {
           capital: string | null;
           region: string | null;
           created_at: string;
+          description: string | null;
         };
         Insert: {
           code: string;
@@ -17,6 +18,7 @@ export interface Database {
           capital?: string | null;
           region?: string | null;
           created_at?: string;
+          description?: string | null;
         };
         Update: {
           code?: string;
@@ -25,6 +27,7 @@ export interface Database {
           capital?: string | null;
           region?: string | null;
           created_at?: string;
+          description?: string | null;
         };
       };
       relations: {

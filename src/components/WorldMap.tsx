@@ -152,7 +152,8 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
             nameJa: supabaseCountry?.nameJa || props.name,
             capital: supabaseCountry?.capital || '',
             region: supabaseCountry?.region || props.subregion || '',
-            latlng: [0, 0] // Will be set from geometry
+            latlng: [0, 0], // Will be set from geometry
+            description: supabaseCountry?.description || undefined
           };
           onCountrySelect(country);
         },
