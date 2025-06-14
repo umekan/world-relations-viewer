@@ -159,10 +159,25 @@ export default function WorldMap({ selectedCountry, onCountrySelect, relations }
         },
         mouseover: (e: L.LeafletMouseEvent) => {
           const layer = e.target;
+          const props = feature.properties;
+          let countryCode = props['ISO3166-1-Alpha-2'] || props.ISO_A2 || props.iso_a2 || props.iso2 || props.code || props.id;
+          
+          // 国コードが無効な場合は国名から検索
+          if (!countryCode || countryCode === '-99' || countryCode === '-1') {
+            const country = countries.find(c => 
+              c.name === props.name || c.nameJa === props.name
+            );
+            countryCode = country?.code;
+          }
+          
+          // データの有無に応じてホバー色を調整
+          const hasRelationData = countryCode && countriesWithRelations.has(countryCode);
+          const hoverColor = hasRelationData ? '#1d4ed8' : '#374151'; // blue-700 for data, gray-700 for no data
+          
           layer.setStyle({
             weight: 2.5,
             fillOpacity: 0.85,
-            color: '#1e40af' // blue-800 on hover
+            color: hoverColor
           });
         },
         mouseout: (e: L.LeafletMouseEvent) => {

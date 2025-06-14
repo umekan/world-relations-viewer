@@ -2,7 +2,12 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../src/types/database';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL || 'https://rzsbezgovdebnrmtvtwh.supabase.co';
-const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6c2JlemdvdmRlYm5ybXR2dHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4Mjg4NzQsImV4cCI6MjA2NTQwNDg3NH0.ks3zHdJkCnDvDiriwyxAIOJMxUwuGeU1B2_aG91u1BY';
+const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseAnonKey) {
+  console.error('❌ VITE_SUPABASE_ANON_KEY environment variable is required');
+  process.exit(1);
+}
 
 const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
 

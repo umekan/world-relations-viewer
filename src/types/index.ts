@@ -41,7 +41,7 @@ export const RelationColors: Record<RelationLevel, string> = {
 
 // 初期状態での国の色分け
 export const InitialCountryColors = {
-  HAS_DATA: '#869eb0',      // stone-blue-400 - データありの国（落ち着いたブルー）
-  NO_DATA: '#a8a29e',       // warm-gray-400 - データなしの国（ウォームグレー）
-  SELECTED: '#526a7e'       // stone-blue-600 - 選択された国（ダークブルー）
+  HAS_DATA: '#2563eb',      // blue-600 - データありの国（鮮やかなブルー）
+  NO_DATA: '#e5e7eb',       // gray-200 - データなしの国（明るいグレー）
+  SELECTED: '#1d4ed8'       // blue-700 - 選択された国（濃いブルー）
 } as const;
